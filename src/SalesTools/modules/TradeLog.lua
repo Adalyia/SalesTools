@@ -1,13 +1,10 @@
 -- Basic imports(s)/setup
 local L = LibStub("AceLocale-3.0"):GetLocale("SalesTools") -- Localization support
+local StdUi = LibStub("StdUi")
 local SalesTools = LibStub("AceAddon-3.0"):GetAddon("SalesTools")
 local TradeLog = SalesTools:NewModule("TradeLog", "AceEvent-3.0", "AceHook-3.0", "AceConsole-3.0")
-local StdUi = LibStub("StdUi")
 
 function TradeLog:OnEnable()
-    -- Assign StdUi from SalesTools
-    self.StdUi = SalesTools.StdUi		
-
     -- Run when the module is enabled
     SalesTools:Debug("TradeLog:OnEnable")
 
@@ -235,8 +232,6 @@ function TradeLog:DrawWindow()
     -- Draw our Trade Logs Window
     SalesTools:Debug("TradeLog:DrawWindow")
 
-    local StdUi = self.StdUi
-
     local LogFrame
     if (self.CharacterSettings.LogFrameSize ~= nil) then
         LogFrame = StdUi:Window(UIParent, self.CharacterSettings.LogFrameSize.width, self.CharacterSettings.LogFrameSize.height, "Trade Log Viewer")
@@ -311,6 +306,8 @@ function TradeLog:DrawWindow()
 		end
 	end
 	TradeLog.TradeAuditFrame.EditBox:SetText(TradeAuditString)
+	TradeLog.TradeAuditFrame.EditBox:SetFocus()
+	TradeLog.TradeAuditFrame.EditBox:HighlightText()
 
     end)	
 
@@ -354,8 +351,6 @@ end
 function TradeLog:DrawReportWindow()
     -- Draw a window with an edit box for our gold audit
     SalesTools:Debug("TradeLog:DrawReportWindow")
-
-    local StdUi = self.StdUi
 
     local TradeAuditFrame = StdUi:Window(UIParent, 720, 960, L["TradeLog_Audit_Window_Title"])
     TradeAuditFrame:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
@@ -420,8 +415,6 @@ end
 function TradeLog:DrawSearchPane()
     -- Draw the search box
     SalesTools:Debug("TradeLog:DrawSearchPane")
-
-    local StdUi = self.StdUi
 
     local LogFrame = self.LogFrame
     local SearchBox = StdUi:Autocomplete(LogFrame, 400, 30, "", nil, nil, nil)

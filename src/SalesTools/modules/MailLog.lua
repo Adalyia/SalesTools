@@ -181,6 +181,10 @@ function MailLog:DrawWindow()
         end    
 	end
 	MailLog.MailAuditFrame.EditBox:SetText(MailAuditString)
+	MailLog.MailAuditFrame.EditBox:SetFocus()
+	C_Timer.After(0.5, function()
+		MailLog.MailAuditFrame.EditBox:HighlightText()
+	end)
 
     end)	
 			 	

@@ -5,6 +5,7 @@
     Author(s): 
     - Emily Cohen / Emilýp-Illidan / adalyiawra@gmail.com
     - Honorax-Illidan - https://worldofwarcraft.com/en-us/character/us/illidan/honorax (Original author, this addon is largely based on his idea/work)
+    - David Martínez / Volthemar-Dalaran / damaartinezgo@gmail.com
 --]]
 
 --[[
@@ -20,7 +21,7 @@
 -- Basic imports(s)/setup
 local L = LibStub("AceLocale-3.0"):GetLocale("SalesTools") -- Localization support
 SalesTools = LibStub("AceAddon-3.0"):NewAddon("SalesTools", "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0")
-local StdUi = LibStub('StdUi')
+local StdUi = LibStub("StdUi")
 local LibDBIcon = LibStub("LibDBIcon-1.0")
 
 -- Global for our addon object
