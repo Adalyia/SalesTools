@@ -246,6 +246,7 @@ function SalesTools:DrawMinimapButton()
             end
             
             EasyMenu(SalesTools.MinimapMenu, self.MinimapMenuFrame, "cursor", 0, 0, "MENU");
+            
         end,
     })
 
@@ -412,6 +413,25 @@ function SalesTools:CommaValue(amount)
     return formatted
 end
 
+
+-- I'm Lazy :3
+function EasyMenu(menuList, menuFrame, anchor, x, y, displayMode, autoHideDelay )
+	if ( displayMode == "MENU" ) then
+		menuFrame.displayMode = displayMode;
+	end
+	UIDropDownMenu_Initialize(menuFrame, EasyMenu_Initialize, displayMode, nil, menuList);
+	ToggleDropDownMenu(1, nil, menuFrame, anchor, x, y, menuList, nil, autoHideDelay);
+end
+
+function EasyMenu_Initialize( frame, level, menuList )
+	for index = 1, #menuList do
+		local value = menuList[index]
+		if (value.text) then
+			value.index = index;
+			UIDropDownMenu_AddButton( value, level );
+		end
+	end
+end
 
 function SalesTools:FormatRawCurrency(currency)
     -- Convert a value in copper to a rounded value in gold
