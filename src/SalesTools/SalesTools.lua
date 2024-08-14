@@ -50,12 +50,12 @@ local ADDON_OPTION_DEFAULTS = {
     },
     author = {
         type = "description",
-        name = "\n|cffffd100" .. L["Author"] .. ": |r " .. GetAddOnMetadata("SalesTools", "Author"),
+        name = "\n|cffffd100" .. L["Author"] .. ": |r " .. C_AddOns.GetAddOnMetadata("SalesTools", "Author"),
         order = 2
     },
     version = {
         type = "description",
-        name = "|cffffd100" .. L["Version"] .. ": |r" .. GetAddOnMetadata("SalesTools", "Version") .. "\n",
+        name = "|cffffd100" .. L["Version"] .. ": |r" .. C_AddOns.GetAddOnMetadata("SalesTools", "Version") .. "\n",
         order = 3
     },
     hide_minimap = {
@@ -78,7 +78,7 @@ local ADDON_COMMAND_DEFAULTS = {
     version = {
         desc = L["SalesTools_Version_Command_Desc"],
         action = function()
-            SalesTools:Print(string.format(L["SalesTools_Version_Command_Msg"], GetAddOnMetadata("SalesTools", "Version")))
+            SalesTools:Print(string.format(L["SalesTools_Version_Command_Msg"], C_AddOns.GetAddOnMetadata("SalesTools", "Version")))
             SalesTools:AddonInfoPanel()
         end,
     },
@@ -206,7 +206,7 @@ function SalesTools:OnInitialize()
     self:RegisterChatCommand(ADDON_COMMAND4, OnCommand)
 
     -- Print version information
-    self:Print(string.format(L["Version_Message"], GetAddOnMetadata("SalesTools", "Version"),GetAddOnMetadata("SalesTools", "Author")))
+    self:Print(string.format(L["Version_Message"], C_AddOns.GetAddOnMetadata("SalesTools", "Version"),C_AddOns.GetAddOnMetadata("SalesTools", "Author")))
 end
 
 function SalesTools:OnEnable()
@@ -313,15 +313,15 @@ function SalesTools:AddonInfoPanel()
         window:SetMovable(false);
         window:EnableMouse(false);
 
-        local addonVersion = StdUi:Label(window, '|cffFFE400' .. GetAddOnMetadata("SalesTools", "Version") .. '|r', 17, nil, 160);
+        local addonVersion = StdUi:Label(window, '|cffFFE400' .. C_AddOns.GetAddOnMetadata("SalesTools", "Version") .. '|r', 17, nil, 160);
         addonVersion:SetJustifyH('MIDDLE');
         StdUi:GlueTop(addonVersion, window, 0, -40);
 
-        local addonAuthor = StdUi:Label(window, '|cff00FF17' .. GetAddOnMetadata("SalesTools", "Author"):gsub(" / ", string.char(10)) .. '|r', 13, nil, 200);
+        local addonAuthor = StdUi:Label(window, '|cff00FF17' .. C_AddOns.GetAddOnMetadata("SalesTools", "Author"):gsub(" / ", string.char(10)) .. '|r', 13, nil, 200);
         addonAuthor:SetJustifyH('MIDDLE');
         StdUi:GlueBelow(addonAuthor, addonVersion, 0, -10);
 
-        local addonNotes = StdUi:Label(window, '|cff00F7FF' .. GetAddOnMetadata("SalesTools", "Notes") .. '|r', 13, nil, 300);
+        local addonNotes = StdUi:Label(window, '|cff00F7FF' .. C_AddOns.GetAddOnMetadata("SalesTools", "Notes") .. '|r', 13, nil, 300);
         addonNotes:SetJustifyH('MIDDLE');
         StdUi:GlueBelow(addonNotes, addonAuthor, 0, -15);
 
