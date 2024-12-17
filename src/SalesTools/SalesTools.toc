@@ -1,4 +1,4 @@
-## Interface: 110002
+## Interface: 110007
 ## Title: .SalesTools
 ## Notes:|cfffe7b2cPackage of several tools & QoL features for Advertising & Gold Collecting in World of Warcraft|r
 ## Version: 1.1.1
