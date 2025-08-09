@@ -136,6 +136,34 @@ function CollectorMenu:DrawCollectorWindow()
                 end
             end)
         end
+
+-- Trade Log Button
+if frame.TradeLog == nil then
+    local tradelogButton = StdUi:Button(frame, 124, 30, L["CollectorMenu_TradeLog_Button"])
+    StdUi:GlueTop(tradelogButton, frame.InviteTargetButton, 0, -30, 'CENTER')
+    frame.TradeLog = tradelogButton
+    frame.TradeLog:SetScript("OnClick", function()
+        if (SalesTools.TradeLog) then
+            SalesTools.TradeLog:Toggle()
+        end
+    end)
+end
+
+-- Mass Inviter Button
+if frame.MassInvite == nil then
+    local MassInviteButton = StdUi:Button(frame, 124, 30, L["CollectorMenu_MassInvite_Button"])
+    StdUi:GlueTop(MassInviteButton, frame.TradeLog, 0, -30, 'CENTER')
+    frame.MassInvite = MassInviteButton
+    frame.MassInvite:SetScript("OnClick", function()
+        if ChatFrame1EditBox then
+            ChatFrame1EditBox:SetText("/sales help")
+            ChatEdit_SendText(ChatFrame1EditBox, 0)
+        end
+    end)
+end
+
+
+
     
         -- Target Trade Button
         if frame.TradeTargetButton == nil then
@@ -147,20 +175,7 @@ function CollectorMenu:DrawCollectorWindow()
                     InitiateTrade("target")
                 end
             end)
-        end
-    
-        -- Invite Request Button
-        if frame.RequestInviteButton == nil then
-            local RequestInviteButton = StdUi:Button(frame, 124, 30, L["CollectorMenu_Invite_Request_Button"])
-            StdUi:GlueTop(RequestInviteButton, frame.InviteTargetButton, 0, -30, 'CENTER')
-            frame.RequestInviteButton = RequestInviteButton
-            frame.RequestInviteButton:SetScript("OnClick", function()
-                if (self.GlobalSettings.PrimaryCollectorChar == "" or self.GlobalSettings.RequestInviteMessage == "") then
-                    SalesTools:Print(L["CollectorMenu_Invite_Request_No_Primary"])
-                else
-                    SendChatMessage(self.GlobalSettings.RequestInviteMessage, "WHISPER", nil, self.GlobalSettings.PrimaryCollectorChar)
-                end
-            end)
+
         end
 
         -- Mail Log Button
@@ -173,20 +188,9 @@ function CollectorMenu:DrawCollectorWindow()
                     SalesTools.MailLog:Toggle()
                 end
             end)
+
         end
-    
-        -- Trade Log Button
-        if frame.TradeLog == nil then
-            local tradelogButton = StdUi:Button(frame, 124, 30, L["CollectorMenu_TradeLog_Button"])
-            StdUi:GlueTop(tradelogButton, frame.RequestInviteButton, 0, -30, 'CENTER')
-            frame.TradeLog = tradelogButton
-            frame.TradeLog:SetScript("OnClick", function()
-                if (SalesTools.TradeLog) then
-                    SalesTools.TradeLog:Toggle()
-                end
-            end)
-        end
-    
+
         -- Gold Log Button
         if frame.GoldLabelLog == nil then
             local goldLogButton = StdUi:Button(frame, 124, 30, L["CollectorMenu_BalanceList_Button"])
@@ -197,36 +201,45 @@ function CollectorMenu:DrawCollectorWindow()
                     SalesTools.BalanceList:Toggle()
                 end
             end)
+
         end
+
+        -- Invite Request Button
+        if frame.RequestInviteButton == nil then
+            local RequestInviteButton = StdUi:Button(frame, 124, 30, L["CollectorMenu_Invite_Request_Button"])
+            StdUi:GlueTop(RequestInviteButton, frame.GoldLabelLog, 0, -30, 'CENTER')
+            frame.RequestInviteButton = RequestInviteButton
+            frame.RequestInviteButton:SetScript("OnClick", function()
+                -- Show a tip in chat on how to re-open the Collector Menu
+if SalesTools and SalesTools.Print then
+    SalesTools:Print("to open Collector Menu type |cffffff00/sales collect|r")
+else
+    print("|cff33ff99[SalesTools]|r to open Collector Menu type |cffffff00/sales collect|r")
+end
+-- Run the existing toggle via slash command
+if ChatFrame1EditBox then
+    ChatFrame1EditBox:SetText("/sales collect")
+    ChatEdit_SendText(ChatFrame1EditBox, 0)
+end
+end)
+        end
+
+
 
         -- Mass Whisper Button
         if frame.MassWhisperButton == nil then
             local MassWhisperButton = StdUi:Button(frame, 124, 30, L["CollectorMenu_MassWhisper_Button"])
-            StdUi:GlueTop(MassWhisperButton, frame.TradeLog, 0, -30, 'CENTER')
+            StdUi:GlueTop(MassWhisperButton, frame.MassInvite, 0, -30, 'CENTER')
             frame.MassWhisperButton = MassWhisperButton
             frame.MassWhisperButton:SetScript("OnClick", function()
-                if (SalesTools.MassWhisper) then
-                    SalesTools.MassWhisper:Toggle()
-                end
-            end)
-        end
-    
-        -- Mass Inviter Button
-        if frame.MassInvite == nil then
-            local MassInviteButton = StdUi:Button(frame, 124, 30, L["CollectorMenu_MassInvite_Button"])
-            StdUi:GlueTop(MassInviteButton, frame.GoldLabelLog, 0, -30, 'CENTER')
-            frame.MassInvite = MassInviteButton
-            frame.MassInvite:SetScript("OnClick", function()
-                if (SalesTools.MassInvite) then
-                    SalesTools.MassInvite:Toggle()
-                end
-            end)
+                SalesTools:ToggleInfoPanel()
+end)
         end
     
     
         -- Gold Section
         local goldText = StdUi:Label(frame, "Gold Info", 16)
-        StdUi:GlueTop(goldText, frame.MassInvite, -63, -40, 'CENTER')
+        StdUi:GlueTop(goldText, frame.RequestInviteButton, -63, -40, 'CENTER')
     
         -- Label for how much gold the player has
         if frame.GoldLabel == nil then
@@ -236,7 +249,7 @@ function CollectorMenu:DrawCollectorWindow()
             frame.GoldLabel = GoldCopyButton
             frame.GoldLabel:SetScript("OnClick", function()
                 local gold = math.floor(GetMoney() / 100 / 100)
-                SalesTools:ShowPopup(gold)
+                SalesTools:Copy(gold, "Copy Gold")
             end)
         end
     
@@ -248,7 +261,7 @@ function CollectorMenu:DrawCollectorWindow()
             frame.GoldCapLabel = goldCapButton
             frame.GoldCapLabel:SetScript("OnClick", function()
                 local gold = 9999999 - math.floor(GetMoney() / 100 / 100)
-                SalesTools:ShowPopup(gold)
+                SalesTools:Copy(gold, "Copy Gold")
             end)
         end
 
