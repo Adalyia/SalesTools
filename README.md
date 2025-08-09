@@ -1,6 +1,6 @@
 # SalesTools (Retail 11.2 Compatible)
 
-**Author / Maintainer:** Updated for patch 11.2 by **Osiris the Kiwi** (Discord: `osirisnz`)  
+**Author / Maintainer:** Updated for patch 11.2 by **Osiris the Kiwi 🥝** (Discord: `osirisnz`)  
 **Original Authors & Contributors:** Adalyia-Illidan, Volthemar-Dalaran, Honorax-Illidan
 
 SalesTools is a World of Warcraft addon designed to streamline gold trading, sales tracking, and communication for collectors, traders, and boosters.  
