@@ -93,5 +93,5 @@ You are free to use, modify, and distribute it, provided that:
 ## 🙏 Credits
 
 - **Original Authors:** Adalyia-Illidan, Volthemar-Dalaran, Honorax-Illidan
-- **Retail 11.2 Maintenance:** Osiris the Kiwi
+- **Retail 11.2 Maintenance:** Osiris the Kiwi 🥝
 - Thanks to the WoW addon community for continued feedback and testing.
