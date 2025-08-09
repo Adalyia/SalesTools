@@ -1,29 +1,97 @@
-# SalesTools
+# SalesTools (Retail 11.2 Compatible)
 
-SalesTools is a light-weight all-in-one package of helpful tools and quality of life features for advertising & processing in-game gold sales in World of Warcraft. This is a continuation and expansion of the GallywixAdTools addon by Honorax-Illidan.
+**Author / Maintainer:** Updated for patch 11.2 by **Osiris the Kiwi** (Discord: `osirisnz`)  
+**Original Authors & Contributors:** Adalyia-Illidan, Volthemar-Dalaran, Honorax-Illidan
 
-## Features
-- Multi-language support (en_US, pt_BR, es_ES, es_MX, more coming soon)
-- Character balance tracking (including guild bank gold of guilds you own)
-- Automatic keyword-based inviting
-- Automatic invite acceptance
-- Mass / Bulk mail sender
-- Mass / Bulk whisper sender
-- Informational displays (including your character name, realm, & gold)
-- Mail Log
-- Trade Log
-- Trade Whispering, gold amounts traded are whispered to the other party
-- Mass / Bulk inviter
-- Mass / Bulk mail pickup (Allows for matching of expected subjects, used in a many-to-one gold sending structure)
+SalesTools is a World of Warcraft addon designed to streamline gold trading, sales tracking, and communication for collectors, traders, and boosters.  
+This repository is a **continuation and maintenance fork** of the original [SalesTools by Adalyia](https://github.com/Adalyia/SalesTools), updated for Retail patch 11.2 with fixes, quality-of-life improvements, and UI enhancements.
 
+---
 
+## ✨ Features
 
-## TODO
-- Add locale support for Russian, German, and French
-- Create additional options around balance tracking
-- Allow trade / mail log import/exports
-- Remove the dependance on StdUi
+- **Collector Menu**  
+  Centralized hub for addon features, including quick access to Trade Log, Balance List, Gold Info, and more.
 
+- **Trade Log Improvements**  
+  - Simplified whisper confirmations — only the concise "Received Xg from Player" message is sent.  
+  - Eliminates duplicate trade messages.  
+  - Fully compatible with modern Retail trade events.
 
-## Known Bugs
-- Currently cannot track mail sent using the "Reply" button in the standard UI
+- **UI & Layout Updates**  
+  - Stable button anchors for all menu actions.  
+  - Logical reordering of buttons for improved usability.  
+  - Gold Info heading matches Collector Menu in font, size, and color.
+
+- **Version Information**  
+  - `/sales version` command now shows maintainer and contributor credits.
+  - In-menu **Version Information** button toggles the version panel.
+  - Startup banner:  
+    ```
+    [SalesTools] Version 1.2.0 updated for patch 11.2 by Osiris the Kiwi
+    ```
+  - Closing the Collector Menu prints:  
+    ```
+    [SalesTools] To open Collector Menu type /sales collect
+    ```
+
+- **Copy Helper Enhancements**  
+  Unified popup for copying player names or gold amounts, with auto-focus and one-click selection.
+
+- **Miscellaneous Fixes**  
+  - Updated to Retail 11.x popup API changes.  
+  - Removed deprecated trade events.  
+  - Silent, safe module loading for better compatibility.
+
+---
+
+## 📦 Installation
+
+1. **Download** the latest release from [Releases](../../releases).
+2. **Extract** the archive so that the folder structure is:  
+   ```
+   World of Warcraft/_retail_/Interface/AddOns/SalesTools/
+   ```
+3. **Restart** WoW or run `/reload` in-game.
+
+---
+
+## 💻 Commands
+
+| Command             | Description                                 |
+| ------------------- | ------------------------------------------- |
+| `/sales collect`    | Toggle the Collector Menu                   |
+| `/sales version`    | Show version information panel              |
+| `/sales help`       | Display the Info Plate                      |
+
+---
+
+## 📜 Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for the complete update history.
+
+---
+
+## 🛠 Development Notes
+
+- This is a **maintenance fork** of the original addon, updated for Retail 11.2.
+- All modifications are noted in file headers where applicable.
+- The addon remains licensed under **GNU General Public License v3.0**.
+
+---
+
+## 📄 License
+
+This project is licensed under the [GNU GPL v3.0](./LICENSE).  
+You are free to use, modify, and distribute it, provided that:
+- The same GPL-3.0 license applies to your changes.
+- Original author credits are preserved.
+- Modifications are clearly documented.
+
+---
+
+## 🙏 Credits
+
+- **Original Authors:** Adalyia-Illidan, Volthemar-Dalaran, Honorax-Illidan
+- **Retail 11.2 Maintenance:** Osiris the Kiwi
+- Thanks to the WoW addon community for continued feedback and testing.
