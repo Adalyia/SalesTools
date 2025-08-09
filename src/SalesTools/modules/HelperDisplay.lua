@@ -143,7 +143,7 @@ function HelperDisplay:DrawHelpWindow()
     frame.GoldDisplay:SetText(SalesTools:CommaValue(gold) .. " " .. L["HelpDisplay_GoldDisplay_Gold"])
     frame.GoldDisplay:SetScript("OnClick", function()
         local gold = math.floor(GetMoney() / 100 / 100)
-        SalesTools:ShowPopup(gold)
+        SalesTools:Copy(gold, "Copy Gold")
     end)
 
     -- Button showing the current character's name
@@ -152,7 +152,7 @@ function HelperDisplay:DrawHelpWindow()
     frame.NameCopyButton:SetPoint("TOP", frame.NameDisplay, "RIGHT", 75, -20)
     frame.NameCopyButton:SetText(name .. "-" .. realm)
     frame.NameCopyButton:SetScript("OnClick", function()
-        SalesTools:ShowPopup(name .. "-" .. realm)
+        SalesTools:Copy(name .. "-" .. realm, "Copy Name")
     end)
 
     self.HelperFrame = frame

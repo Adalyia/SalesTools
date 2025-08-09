@@ -166,19 +166,19 @@ function MailLog:DrawWindow()
 	local player = name .. "-" .. realm
 	
 	for _, mail in pairs(self.GlobalSettings.MailLog) do
-		if LogFrame.AllCharactersOption:GetChecked() then
-			 if mail.openedDate == nil then
-			        MailAuditString = MailAuditString .. string.char(9) .. mail.date .. string.char(9) .. mail.source .. string.char(9) .. mail.destination .. string.char(9) .. SalesTools:FormatRawCurrency(mail.gold) .. string.char(9) .. mail.subject .. string.char(9) .. "" .. string.char(9) .. mail.body ..string.char(10)
-			else
-				    MailAuditString = MailAuditString .. string.char(9) .. mail.date .. string.char(9) .. mail.source .. string.char(9) .. mail.destination .. string.char(9) .. SalesTools:FormatRawCurrency(mail.gold) .. string.char(9) .. mail.subject .. string.char(9) .. mail.openedDate  .. string.char(9) .. mail.body ..string.char(10)
-			end		
-		elseif mail.source == player or mail.destination == player then
-			 if mail.openedDate == nil then
-			        MailAuditString = MailAuditString .. string.char(9) .. mail.date .. string.char(9) .. mail.source .. string.char(9) .. mail.destination .. string.char(9) .. SalesTools:FormatRawCurrency(mail.gold) .. string.char(9) .. mail.subject .. string.char(9) .. "" .. string.char(9) .. mail.body ..string.char(10)
-			else
-				    MailAuditString = MailAuditString .. string.char(9) .. mail.date .. string.char(9) .. mail.source .. string.char(9) .. mail.destination .. string.char(9) .. SalesTools:FormatRawCurrency(mail.gold) .. string.char(9) .. mail.subject .. string.char(9) .. mail.openedDate  .. string.char(9) .. mail.body ..string.char(10)
-			end	
-        end    
+    		local date = mail.date or ""
+    		local source = mail.source or ""
+    		local destination = mail.destination or ""
+    		local gold = SalesTools:FormatRawCurrency(mail.gold or 0)  -- Assuming gold should default to 0
+    		local subject = mail.subject or ""
+    		local openedDate = mail.openedDate or ""
+    		local body = mail.body or ""
+
+    		if LogFrame.AllCharactersOption:GetChecked() then
+        		MailAuditString = MailAuditString .. string.char(9) .. date .. string.char(9) .. source .. string.char(9) .. destination .. string.char(9) .. gold .. string.char(9) .. subject .. string.char(9) .. openedDate .. string.char(9) .. body .. string.char(10)
+    		elseif source == player or destination == player then
+        		MailAuditString = MailAuditString .. string.char(9) .. date .. string.char(9) .. source .. string.char(9) .. destination .. string.char(9) .. gold .. string.char(9) .. subject .. string.char(9) .. openedDate .. string.char(9) .. body .. string.char(10)
+    		end
 	end
 	MailLog.MailAuditFrame.EditBox:SetText(MailAuditString)
 	MailLog.MailAuditFrame.EditBox:SetFocus()
