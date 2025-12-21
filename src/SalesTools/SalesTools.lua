@@ -3,7 +3,6 @@
     Desc: An addon with several useful Quality of Life features for the advertisement & administration of in-game gold sales
     Repo: https://github.com/Adalyia/SalesTools
     Author(s): 
-    - Updated for 11.2 by Osiris the Kiwi / Discord: osirisnz
     - Emily Cohen / Emilýp-Illidan / adalyiawra@gmail.com
     - Honorax-Illidan - https://worldofwarcraft.com/en-us/character/us/illidan/honorax (Original author, this addon is largely based on his idea/work)
     - David Martínez / Volthemar-Dalaran / damaartinezgo@gmail.com
@@ -207,7 +206,7 @@ function SalesTools:OnInitialize()
     self:RegisterChatCommand(ADDON_COMMAND4, OnCommand)
 
     -- Print version information
-    local _ver=C_AddOns.GetAddOnMetadata("SalesTools","Version"); self:Print(string.format("Version %s updated for patch 11.2 by Osiris the Kiwi", _ver))
+    self:Print(string.format(L["Version_Message"], C_AddOns.GetAddOnMetadata("SalesTools", "Version"),C_AddOns.GetAddOnMetadata("SalesTools", "Author")))
 end
 
 function SalesTools:OnEnable()
@@ -302,30 +301,6 @@ end
 
 -- GUI Elements
 
-
-
--- Toggle the version/info panel
-function SalesTools:ToggleInfoPanel()
-
--- Toggle the help/info plate panel
-function SalesTools:ToggleHelpPanel()
-    if (self.HelpPanel and self.HelpPanel:IsShown()) then
-        self.HelpPanel:Hide()
-    else
-        -- Trigger the /sales help command programmatically
-        ChatFrame1EditBox:SetText("/sales help")
-        ChatEdit_SendText(ChatFrame1EditBox, 0)
-    end
-end
-
-
-    if (self.InfoPanel and self.InfoPanel:IsShown()) then
-        self.InfoPanel:Hide()
-    else
-        self:AddonInfoPanel()
-    end
-end
-
 function SalesTools:AddonInfoPanel()
     -- Called to draw/display the addon's information panel
     self:Debug("AddonInfoPanel")
@@ -335,30 +310,19 @@ function SalesTools:AddonInfoPanel()
     else
         local window = StdUi:Window(UIParent, 360, 200, L["Addon_Name"])
         window:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
-        if window.closeBtn then window.closeBtn:Show() end
-        if window.closeBtn then window.closeBtn:Show() end
         window:SetMovable(false);
-        window:EnableMouse(true);
+        window:EnableMouse(false);
 
         local addonVersion = StdUi:Label(window, '|cffFFE400' .. C_AddOns.GetAddOnMetadata("SalesTools", "Version") .. '|r', 17, nil, 160);
-        addonVersion:SetJustifyH('CENTER');
+        addonVersion:SetJustifyH('MIDDLE');
         StdUi:GlueTop(addonVersion, window, 0, -40);
 
-        local authorText = table.concat({
-    '|cffffd100Version ' .. C_AddOns.GetAddOnMetadata("SalesTools","Version") .. ' updated for patch 11.2 by Osiris the Kiwi|r',
-    '|cff00FF17Discord: osirisnz|r',
-    '',
-    '|cffffd100Previous authors and contributors|r',
-    '|cff00FF17Adalyia-Illidan|r',
-    '|cff00FF17Volthemar-Dalaran|r',
-    '|cff00FF17Honorax-Illidan|r',
-}, string.char(10))
+        local addonAuthor = StdUi:Label(window, '|cff00FF17' .. C_AddOns.GetAddOnMetadata("SalesTools", "Author"):gsub(" / ", string.char(10)) .. '|r', 13, nil, 200);
+        addonAuthor:SetJustifyH('MIDDLE');
+        StdUi:GlueBelow(addonAuthor, addonVersion, 0, -10);
 
-local addonAuthor = StdUi:Label(window, authorText, 13, nil, 300);
-addonAuthor:SetJustifyH('CENTER');
-StdUi:GlueBelow(addonAuthor, addonVersion, 0, -10);
-local addonNotes = StdUi:Label(window, '|cff00F7FF' .. C_AddOns.GetAddOnMetadata("SalesTools", "Notes") .. '|r', 13, nil, 300);
-        addonNotes:SetJustifyH('CENTER');
+        local addonNotes = StdUi:Label(window, '|cff00F7FF' .. C_AddOns.GetAddOnMetadata("SalesTools", "Notes") .. '|r', 13, nil, 300);
+        addonNotes:SetJustifyH('MIDDLE');
         StdUi:GlueBelow(addonNotes, addonAuthor, 0, -15);
 
         self.InfoPanel = window
@@ -498,93 +462,37 @@ function SalesTools:GetNextFrameLevel()
     return math.min(SalesTools.FRAME_LEVEL, 10000)
 end
 
--- === Unified copy helpers ===
-function SalesTools:Copy(value, title)
-    self:Debug("Copy")
-    if not StaticPopupDialogs["SalesToolsPopup"] then
-        StaticPopupDialogs["SalesToolsPopup"] = {
-            text = "Copy",
-            button1 = OKAY,
-            timeout = 10,
-            whileDead = true,
-            hideOnEscape = true,
-            exclusive = true,
-            enterClicksFirstButton = true,
-            preferredIndex = 3,
-            hasEditBox = true,
-        }
-    end
-    local dialog = StaticPopup_Show("SalesToolsPopup", nil, nil, { text = tostring(value or "") })
-    if not dialog then return end
-    if title and dialog.Text and dialog.Text.SetText then dialog.Text:SetText(tostring(title)) end
-    local eb = dialog.EditBox or dialog.editBox
-    if eb then
-        eb:SetText(tostring(value or ""))
-        eb:HighlightText(0, -1)
-        eb:SetFocus()
-        eb:SetCursorPosition(0)
-        eb:SetScript("OnEnterPressed", function() dialog:Hide() end)
-        eb:SetScript("OnTabPressed", function() dialog:Hide() end)
-        eb:SetScript("OnSpacePressed", function() dialog:Hide() end)
-    end
+function SalesTools:ShowPopup(text)
+    -- Show a popup that the user can copy text from
+    self:Debug("ShowPopup")
+
+    local dialog = StaticPopup_Show("SalesToolsPopup")
+    dialog.editBox:SetScript("OnEscapePressed", function()
+        dialog:Hide()
+    end)
+    dialog.editBox:SetScript("OnEnterPressed", function()
+        dialog:Hide()
+    end)
+    dialog.editBox:SetScript("OnTabPressed", function()
+        dialog:Hide()
+    end)
+    dialog.editBox:SetScript("OnSpacePressed", function()
+        dialog:Hide()
+    end)
+    dialog.editBox:SetText(text)
+    dialog.editBox:SetFocus()
+    dialog.editBox:HighlightText()
 end
 
-function SalesTools:ShowPopup(text, title)
-    self:Copy(text, title or "Copy")
-end
+-- Our popup settings
 StaticPopupDialogs["SalesToolsPopup"] = {
     text = "Copy",
-    button1 = OKAY,
+    button2 = OKAY,
     timeout = 10,
     whileDead = true,
     hideOnEscape = true,
     exclusive = true,
     enterClicksFirstButton = true,
     preferredIndex = 3,
-    hasEditBox = true,
+    hasEditBox = true
 }
-
---[[
-Robust startup banner: prints once per load (login or /reload) after chat is ready,
-avoiding duplicate prints across PLAYER_LOGIN / PLAYER_ENTERING_WORLD / ADDON_LOADED.
-]]
-if not SalesToolsStartupFrame then
-    local f = CreateFrame("Frame")
-    SalesToolsStartupFrame = f
-    f.printed = false
-    f:RegisterEvent("ADDON_LOADED")
-    f:RegisterEvent("PLAYER_LOGIN")
-    f:RegisterEvent("PLAYER_ENTERING_WORLD")
-    f:SetScript("OnEvent", function(self, event, ...)
-        if event == "ADDON_LOADED" then
-            local name = ...
-            if name ~= "SalesTools" then return end
-        end
-        if self.printed then return end
-        self.printed = true
-
-        local ver = "?"
-        if C_AddOns and C_AddOns.GetAddOnMetadata then
-            ver = C_AddOns.GetAddOnMetadata("SalesTools", "Version") or "?"
-        elseif GetAddOnMetadata then
-            ver = GetAddOnMetadata("SalesTools", "Version") or "?"
-        end
-
-        if C_Timer and C_Timer.After then
-            C_Timer.After(0.1, function()
-                if SalesTools and SalesTools.Print then
-                    SalesTools:Print(string.format("Version %s updated for patch 11.2 by Osiris the Kiwi", ver))
-                else
-                    print("|cff33ff99[SalesTools]|r Version " .. ver .. " updated for patch 11.2 by Osiris the Kiwi")
-                end
-            end)
-        else
-            if SalesTools and SalesTools.Print then
-                SalesTools:Print(string.format("Version %s updated for patch 11.2 by Osiris the Kiwi", ver))
-            else
-                print("|cff33ff99[SalesTools]|r Version " .. ver .. " updated for patch 11.2 by Osiris the Kiwi")
-            end
-        end
-    end)
-end
-
