@@ -93,22 +93,22 @@ function TradeLog:OnEvent(event, arg1, arg2, ...)
     if (event == "UI_ERROR_MESSAGE") then
         -- Special error cases
         if (arg2 == ERR_TRADE_BAG_FULL or arg2 == ERR_TRADE_MAX_COUNT_EXCEEDED or arg2 == ERR_TRADE_TARGET_BAG_FULL or arg2 == ERR_TRADE_TARGET_MAX_COUNT_EXCEEDED) then
-            SalesTools:Print(string.format(L["TradeLog_Trade_Cancelled"], (TradeLog and TradeLog.TradeTargetName) or self.TradeTargetName or "Unknown", tostring(arg2 or ERR_TRADE_CANCELLED or "Cancelled")))
+            SalesTools:Print(string.format(L["TradeLog_Trade_Cancelled"], TradeLog.TradeTargetName))
             TradeLog:Finish()
         end
     elseif (event == "UI_INFO_MESSAGE" and (arg2 == ERR_TRADE_CANCELLED or arg2 == ERR_TRADE_COMPLETE)) then
         -- Cancelled or success
         if (arg2 == ERR_TRADE_CANCELLED and self.TradeTargetName) then
-            SalesTools:Print(string.format(L["TradeLog_Trade_Cancelled"], (TradeLog and TradeLog.TradeTargetName) or self.TradeTargetName or "Unknown", tostring(arg2 or ERR_TRADE_CANCELLED or "Cancelled")))
+            SalesTools:Print(string.format(L["TradeLog_Trade_Cancelled"], TradeLog.TradeTargetName))
             TradeLog:Finish()
         else
             SalesTools:Print(string.format(L["TradeLog_Trade_Completed"], TradeLog.TradeTargetName))
             self.GlobalSettings.TradeLog[#self.GlobalSettings.TradeLog + 1] = self.PendingTradeContents
             if self.GlobalSettings.WhisperAfterTrade then
                 if (self.PendingTradeContents.playerGold > 0) then
-                    SendChatMessage(string.format(L["TradeLog_Trade_Gave"], SalesTools:FormatRawCurrency(self.PendingTradeContents.playerGold),self.PendingTradeContents.target,self.GlobalSettings.TradeWhisperSuffix), "WHISPER", nil, self.PendingTradeContents.target)
+                    SendChatMessage(string.format(L["TradeLog_Trade_Gave"], SalesTools:FormatRawCurrency(self.PendingTradeContents.playerGold),self.PendingTradeContents.target,self.GlobalSettings.TradeWhisperSuffix), "WHISPER", "COMMON", self.PendingTradeContents.target)
                 elseif (self.PendingTradeContents.targetGold > 0) then
-                    SendChatMessage(string.format(L["TradeLog_Trade_Received"], SalesTools:FormatRawCurrency(self.PendingTradeContents.targetGold),self.PendingTradeContents.target,self.GlobalSettings.TradeWhisperSuffix), "WHISPER", nil, self.PendingTradeContents.target)
+                    SendChatMessage(string.format(L["TradeLog_Trade_Received"], SalesTools:FormatRawCurrency(self.PendingTradeContents.targetGold),self.PendingTradeContents.target,self.GlobalSettings.TradeWhisperSuffix), "WHISPER", "COMMON", self.PendingTradeContents.target)
                 end
             end
             TradeLog:PrintTradeContents()
@@ -120,8 +120,7 @@ function TradeLog:OnEvent(event, arg1, arg2, ...)
             TradeLog:Finish()
         end
     elseif (event == "TRADE_SHOW") then
-        -- FIX: 11.x requires lower-case "npc". Upper-case returns nil.
-        local name, realm = UnitName("npc")
+        local name, realm = UnitName("NPC")
         if realm ~= nil then
             self.TradeTargetName = name .. "-" .. realm:gsub(' ','')
         else
@@ -298,25 +297,18 @@ function TradeLog:DrawWindow()
 	local TradeAuditString = ""
 	local name, realm = UnitFullName("player")
 	local player = name .. "-" .. realm
-
+	
 	for _, trade in pairs(self.GlobalSettings.TradeLog) do
-    		local date = trade.date or ""
-    		local player = trade.player or ""
-    		local playerGold = SalesTools:FormatRawCurrency(trade.playerGold or 0)  -- Default to 0 for numeric values
-    		local playerItems = TradeLog:trim(trade.playerItems or "")
-    		local target = trade.target or ""
-    		local targetGold = SalesTools:FormatRawCurrency(trade.targetGold or 0)  -- Default to 0 for numeric values
-    		local targetItems = TradeLog:trim(trade.targetItems or "")
-
-    		if LogFrame.AllCharactersOption:GetChecked() then
-        		TradeAuditString = TradeAuditString .. string.char(9) .. date .. string.char(9) .. player .. string.char(9) .. playerGold .. string.char(9) .. playerItems .. string.char(9) .. target .. string.char(9) .. targetGold .. string.char(9) .. targetItems .. string.char(10)
-    		elseif player == player then
-        		TradeAuditString = TradeAuditString .. string.char(9) .. date .. string.char(9) .. player .. string.char(9) .. playerGold .. string.char(9) .. playerItems .. string.char(9) .. target .. string.char(9) .. targetGold .. string.char(9) .. targetItems .. string.char(10)
-    		end
+		if LogFrame.AllCharactersOption:GetChecked() then
+			TradeAuditString = TradeAuditString .. string.char(9) .. trade.date .. string.char(9) .. trade.player .. string.char(9) .. SalesTools:FormatRawCurrency(trade.playerGold) .. string.char(9) .. TradeLog:trim(trade.playerItems) .. string.char(9) .. trade.target .. string.char(9) .. SalesTools:FormatRawCurrency(trade.targetGold) .. string.char(9) .. TradeLog:trim(trade.targetItems) .. string.char(10)
+		elseif trade.player == player then
+			TradeAuditString = TradeAuditString .. string.char(9) .. trade.date .. string.char(9) .. trade.player .. string.char(9) .. SalesTools:FormatRawCurrency(trade.playerGold) .. string.char(9) .. TradeLog:trim(trade.playerItems) .. string.char(9) .. trade.target .. string.char(9) .. SalesTools:FormatRawCurrency(trade.targetGold) .. string.char(9) .. TradeLog:trim(trade.targetItems) .. string.char(10)
+		end
 	end
 	TradeLog.TradeAuditFrame.EditBox:SetText(TradeAuditString)
 	TradeLog.TradeAuditFrame.EditBox:SetFocus()
-	TradeLog.TradeAuditFrame.EditBox:HighlightText(0,-1)
+	TradeLog.TradeAuditFrame.EditBox:HighlightText()
+
     end)	
 
     self.LogFrame = LogFrame
@@ -634,10 +626,6 @@ end
 function TradeLog:EnsureFullName(name)
     -- Require full player-realm format
     SalesTools:Debug("TradeLog:EnsureFullName")
-
-    if (not name or name == "") then
-        return ""
-    end
 
     if (not name:find("-")) then
         name = name .. "-" .. select(2, UnitFullName("player"))
