@@ -93,22 +93,22 @@ function TradeLog:OnEvent(event, arg1, arg2, ...)
     if (event == "UI_ERROR_MESSAGE") then
         -- Special error cases
         if (arg2 == ERR_TRADE_BAG_FULL or arg2 == ERR_TRADE_MAX_COUNT_EXCEEDED or arg2 == ERR_TRADE_TARGET_BAG_FULL or arg2 == ERR_TRADE_TARGET_MAX_COUNT_EXCEEDED) then
-            SalesTools:Print(string.format(L["TradeLog_Trade_Cancelled"], TradeLog.TradeTargetName))
+            SalesTools:Print(string.format(L["TradeLog_Trade_Cancelled"], TradeLog.TradeTargetName, arg2 or ""))
             TradeLog:Finish()
         end
     elseif (event == "UI_INFO_MESSAGE" and (arg2 == ERR_TRADE_CANCELLED or arg2 == ERR_TRADE_COMPLETE)) then
         -- Cancelled or success
         if (arg2 == ERR_TRADE_CANCELLED and self.TradeTargetName) then
-            SalesTools:Print(string.format(L["TradeLog_Trade_Cancelled"], TradeLog.TradeTargetName))
+            SalesTools:Print(string.format(L["TradeLog_Trade_Cancelled"], TradeLog.TradeTargetName, arg2 or ""))
             TradeLog:Finish()
         else
             SalesTools:Print(string.format(L["TradeLog_Trade_Completed"], TradeLog.TradeTargetName))
             self.GlobalSettings.TradeLog[#self.GlobalSettings.TradeLog + 1] = self.PendingTradeContents
             if self.GlobalSettings.WhisperAfterTrade then
                 if (self.PendingTradeContents.playerGold > 0) then
-                    SendChatMessage(string.format(L["TradeLog_Trade_Gave"], SalesTools:FormatRawCurrency(self.PendingTradeContents.playerGold),self.PendingTradeContents.target,self.GlobalSettings.TradeWhisperSuffix), "WHISPER", "COMMON", self.PendingTradeContents.target)
+                    SendChatMessage(string.format(L["TradeLog_Trade_Gave"], SalesTools:FormatRawCurrency(self.PendingTradeContents.playerGold),self.PendingTradeContents.target,self.GlobalSettings.TradeWhisperSuffix), "WHISPER", nil, self.PendingTradeContents.target)
                 elseif (self.PendingTradeContents.targetGold > 0) then
-                    SendChatMessage(string.format(L["TradeLog_Trade_Received"], SalesTools:FormatRawCurrency(self.PendingTradeContents.targetGold),self.PendingTradeContents.target,self.GlobalSettings.TradeWhisperSuffix), "WHISPER", "COMMON", self.PendingTradeContents.target)
+                    SendChatMessage(string.format(L["TradeLog_Trade_Received"], SalesTools:FormatRawCurrency(self.PendingTradeContents.targetGold),self.PendingTradeContents.target,self.GlobalSettings.TradeWhisperSuffix), "WHISPER", nil, self.PendingTradeContents.target)
                 end
             end
             TradeLog:PrintTradeContents()

@@ -42,6 +42,7 @@ function BalanceList:OnEnable()
     BalanceList:RegisterEvent("GUILDBANKFRAME_CLOSED", "UpdateGold")
     BalanceList:RegisterEvent("GUILDBANKFRAME_OPENED", "UpdateGold")
     BalanceList:RegisterEvent("GUILDBANK_UPDATE_MONEY", "UpdateGold")
+    BalanceList:RegisterEvent("PLAYER_ACCOUNT_BANK_TAB_SLOTS_CHANGED", "UpdateGold")
     self:UpdateGold()
 
 end
@@ -152,7 +153,7 @@ function BalanceList:DrawWindow()
             BalanceList.BalanceAuditFrame:Show()
         end
         local BalanceAuditString = ""
-        local AccountBalance = 0
+        local CharactersBalance = 0
 
         for _, CharBalanceInfo in pairs(self.GlobalSettings.BalanceList) do
             --if (SalesTools:FormatRawCurrency(CharBalanceInfo["Personal"]) >= 1 or SalesTools:FormatRawCurrency(CharBalanceInfo["Guild"]) >= 1) then
@@ -221,23 +222,30 @@ function BalanceList:DrawSearchPane()
 
     local Search_Button = StdUi:Button(BalanceFrame, 80, 30, L["BalanceList_Search_Button"] )
 
-    local AccountBalance = 0
+    local CharactersBalance = 0
     for _, CharBalanceInfo in pairs(self.GlobalSettings.BalanceList) do
         --if (SalesTools:FormatRawCurrency(CharBalanceInfo["Personal"]) >= 1) then
-            AccountBalance = AccountBalance + CharBalanceInfo["Personal"]
+            CharactersBalance = CharactersBalance + CharBalanceInfo["Personal"]
 
         --end
 
 
     end
 
-    AccountBalance = BalanceList:MoneyFormat(AccountBalance)
+    local warbankGold = BalanceList:GetWarbankGold()
+    
+    warbankGold = BalanceList:MoneyFormat(warbankGold)    
 
-    local GoldLabel = StdUi:Label(BalanceFrame, string.format(L["BalanceList_AccountBalance"],string.char(10),AccountBalance), 14, nil, 200, 30)
+    CharactersBalance = BalanceList:MoneyFormat(CharactersBalance)
+
+    local WarbankLabel = StdUi:Label(BalanceFrame, string.format(L["BalanceList_WarbankBalance"], string.char(10), warbankGold), 14, nil, 200, 30)
+   
+    local GoldLabel = StdUi:Label(BalanceFrame, string.format(L["BalanceList_CharactersBalance"],string.char(10),CharactersBalance), 14, nil, 200, 30)
 
     StdUi:GlueTop(SearchBox, BalanceFrame, 10, -40, "LEFT")
     StdUi:GlueTop(Search_Button, BalanceFrame, 420, -40, "LEFT")
-    StdUi:GlueTop(GoldLabel, BalanceFrame, -20, -40, "RIGHT")
+    StdUi:GlueTop(GoldLabel, BalanceFrame, -120, -40, "RIGHT")
+    StdUi:GlueTop(WarbankLabel, BalanceFrame, 40, -40, "RIGHT")
 
     SearchBox:SetScript("OnEnterPressed", function()
         BalanceList:SearchEntries(SearchBox:GetText())
@@ -247,9 +255,9 @@ function BalanceList:DrawSearchPane()
     end)
 
     BalanceFrame.GoldLabel = GoldLabel
+    BalanceFrame.WarbankLabel = WarbankLabel
     BalanceFrame.SearchBox = SearchBox
     BalanceFrame.Search_Button = Search_Button
-
 
 end
 
@@ -393,18 +401,20 @@ function BalanceList:RefreshData()
 
     if (self.BalanceFrame ~= nil) then
         BalanceList:SearchEntries(self.BalanceFrame.SearchBox:GetText())
-        local AccountBalance = 0
+        local CharactersBalance = 0
         for _, CharBalanceInfo in pairs(self.GlobalSettings.BalanceList) do
             --if (SalesTools:FormatRawCurrency(CharBalanceInfo["Personal"]) >= 1) then
-                AccountBalance = AccountBalance + CharBalanceInfo["Personal"]
+                CharactersBalance = CharactersBalance + CharBalanceInfo["Personal"]
 
             --end
 
 
         end
-        AccountBalance = BalanceList:MoneyFormat(AccountBalance)
-        self.BalanceFrame.GoldLabel:SetText(string.format(L["BalanceList_AccountBalance"],string.char(10),AccountBalance))
-
+	local warbankGold = BalanceList:GetWarbankGold()
+	warbankGold = BalanceList:MoneyFormat(warbankGold)
+        CharactersBalance = BalanceList:MoneyFormat(CharactersBalance)
+        self.BalanceFrame.GoldLabel:SetText(string.format(L["BalanceList_CharactersBalance"],string.char(10),CharactersBalance))
+	self.BalanceFrame.WarbankLabel:SetText(string.format(L["BalanceList_WarbankBalance"], string.char(10),warbankGold))
     end
 end
 
@@ -479,4 +489,13 @@ function BalanceList:MoneyFormat(money, excludeCopper)
     end
 
     return output:trim();
+end
+
+function BalanceList:GetWarbankGold()
+    if C_Bank and C_Bank.GetDepositedMOney then
+	return C_Bank.GetDepositedMoney() or 0 
+    elseif C_Bank and C_Bank.FetchDepositedMoney then
+	return C_Bank.FetchDepositedMoney(Enum.BankType.Account) or 0
+    end
+    return 0 
 end

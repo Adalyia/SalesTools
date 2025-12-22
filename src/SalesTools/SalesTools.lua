@@ -5,7 +5,7 @@
     Author(s): 
     - Emily Cohen / Emilýp-Illidan / adalyiawra@gmail.com
     - Honorax-Illidan - https://worldofwarcraft.com/en-us/character/us/illidan/honorax (Original author, this addon is largely based on his idea/work)
-    - David Martínez / Volthemar-Dalaran / damaartinezgo@gmail.com
+    - David Martínez / Volthemar-Doomhammer / damaartinezgo@gmail.com
 --]]
 
 --[[
