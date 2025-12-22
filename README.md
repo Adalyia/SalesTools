@@ -5,6 +5,7 @@ SalesTools is a light-weight all-in-one package of helpful tools and quality of 
 ## Features
 - Multi-language support (en_US, pt_BR, es_ES, es_MX, more coming soon)
 - Character balance tracking (including guild bank gold of guilds you own)
+- Warbank balance tracking
 - Automatic keyword-based inviting
 - Automatic invite acceptance
 - Mass / Bulk mail sender
@@ -20,8 +21,6 @@ SalesTools is a light-weight all-in-one package of helpful tools and quality of 
 
 ## TODO
 - Add locale support for Russian, German, and French
-- Create additional options around balance tracking
-- Allow trade / mail log import/exports
 - Remove the dependance on StdUi
 
 
